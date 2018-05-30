@@ -13,18 +13,28 @@ background = pygame.image.load("background.jpg")                # background
 screen = pygame.display.set_mode([800, 600])    # Create an 800x600 sized screen
 
 
+    
+def checkScore( enemyC, persoC):
+    if(persoC.missile1.lock == 1):
+        if((persoC.missile1.y < enemyC.y+15) & (persoC.missile1.y > enemyC.y - 95) & (persoC.missile1.x < enemyC.x+45) & (persoC.missile1.x > enemyC.x )):
+            persoC.score += 1
+            persoC.missile1.lock = 0
+            enemyC.vie = 0
+            print(persoC.score)
+                       
+    
 class enemy :
     x = 0
     y = 0
-    skin_enemy = pygame.image.load("enemy.gif")                # laser skin    
-    skin_enemy = pygame.transform.scale(skin_enemy,(70,70))         # resize skin laser in 30px, 30px
+    skin_enemy = pygame.image.load("enemy.gif")                # enemy skin    
+    skin_enemy = pygame.transform.scale(skin_enemy,(70,70))         # resize skin enemy in 70px, 70px
     vie = 0
     
     def move(self):
         if(self.vie == 0) :
-            self.vie = 100
-            self.x = random.randrange(70,750)
-            self.y = random.randrange(90,470)
+            self.vie = 130
+            self.x = random.randrange(90,690)
+            self.y = random.randrange(80,430)
         self.vie -= 1    
         screen.blit(self.skin_enemy, [self.x, self.y])
 
@@ -71,9 +81,7 @@ class persoMain:                                #   main player
 
         #************************** missil run *****************
         if(self.missile1.lock == 1 ):
-            self.missile1.move()
-
-        
+            self.missile1.move()       
         
     def fire(self):
         print("fire")
@@ -88,10 +96,7 @@ faucon.name = "chewbacca"   # LOL
 font = pygame.font.SysFont("comicsansms", 25)           # font pous les scores
 
 boite_a_caca1 = enemy()
-boite_a_caca2 = enemy()
-boite_a_caca3 = enemy()
-boite_a_caca4 = enemy()
-boite_a_caca5 = enemy()
+
 
 while True:                                                 # main game loop                          
     for event in pygame.event.get():                        # event clavier            
@@ -103,7 +108,7 @@ while True:                                                 # main game loop
 
     myfont = pygame.font.SysFont('Comic Sans MS', 30)
     text = font.render("Score {0}".format(faucon.score), False, (255, 128, 0))    # get score
-    background.blit(text,(25,25))                                           # print score on background
+    
     screen.fill((255, 255, 255))
 
     
@@ -112,13 +117,6 @@ while True:                                                 # main game loop
     clock.tick(60)                                          # setting in 60 FPS ( i know...)
 
     boite_a_caca1.move()
-    boite_a_caca2.move()
-    boite_a_caca3.move()
-    boite_a_caca4.move()
-    boite_a_caca5.move()
-
+    checkScore(boite_a_caca1,faucon)
+    background.blit(text,(25,25))                                           # print score on background
     pygame.display.update()                                 # update screen
-    
-
-
-
