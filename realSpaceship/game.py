@@ -1,4 +1,5 @@
 import pygame, sys
+import random
 
 #************************************************    BY JRMR     ********************************************
 #*********************************************   TRY in PYTHON 3.6  *****************************************
@@ -12,6 +13,22 @@ background = pygame.image.load("background.jpg")                # background
 screen = pygame.display.set_mode([800, 600])    # Create an 800x600 sized screen
 
 
+class enemy :
+    x = 0
+    y = 0
+    skin_enemy = pygame.image.load("enemy.gif")                # laser skin    
+    skin_enemy = pygame.transform.scale(skin_enemy,(70,70))         # resize skin laser in 30px, 30px
+    vie = 0
+    
+    def move(self):
+        if(self.vie == 0) :
+            self.vie = 100
+            self.x = random.randrange(70,750)
+            self.y = random.randrange(90,470)
+        self.vie -= 1    
+        screen.blit(self.skin_enemy, [self.x, self.y])
+
+
 class fire:
     skin_laser = pygame.image.load("laser_anim.gif")                # laser skin    
     skin_laser = pygame.transform.scale(skin_laser,(20,20))         # resize skin laser in 20px, 20px
@@ -20,8 +37,8 @@ class fire:
     lock = 0
         
     def move(self):
-        self.y += 5
-        if(self.y > 550 ) :
+        self.y -= 7
+        if(self.y < 50 ) :
             self.lock = 0
             
         screen.blit(self.skin_laser, [self.x, self.y])
@@ -37,7 +54,7 @@ class persoMain:                                #   main player
 
     score = 0
     x = 120                                                         # x axe to move
-    y = 50                                                          # fix Y coo
+    y = 520                                                          # fix Y coo
 
     def nom(self):
         print(persoMain.name)
@@ -62,14 +79,19 @@ class persoMain:                                #   main player
         print("fire")
         if(self.missile1.lock == 0):
             self.missile1.x = self.x
-            self.missile1.y = 30
+            self.missile1.y = 510
             self.missile1.lock = 1
             
 
 faucon = persoMain()        # create player
 faucon.name = "chewbacca"   # LOL
-font = pygame.font.SysFont("comicsansms", 25)
+font = pygame.font.SysFont("comicsansms", 25)           # font pous les scores
 
+boite_a_caca1 = enemy()
+boite_a_caca2 = enemy()
+boite_a_caca3 = enemy()
+boite_a_caca4 = enemy()
+boite_a_caca5 = enemy()
 
 while True:                                                 # main game loop                          
     for event in pygame.event.get():                        # event clavier            
@@ -83,10 +105,18 @@ while True:                                                 # main game loop
     text = font.render("Score {0}".format(faucon.score), False, (255, 128, 0))    # get score
     background.blit(text,(25,25))                                           # print score on background
     screen.fill((255, 255, 255))
-   
+
+    
     screen.blit(background, [0, 0])                                      #   coo pour l images   
     faucon.refresh()                                            # update player on background
     clock.tick(60)                                          # setting in 60 FPS ( i know...)
+
+    boite_a_caca1.move()
+    boite_a_caca2.move()
+    boite_a_caca3.move()
+    boite_a_caca4.move()
+    boite_a_caca5.move()
+
     pygame.display.update()                                 # update screen
     
 
