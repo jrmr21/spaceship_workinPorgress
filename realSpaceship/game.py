@@ -12,17 +12,88 @@ background = pygame.image.load("background.jpg")                # background
 
 screen = pygame.display.set_mode([800, 600])    # Create an 800x600 sized screen
 
-
+def menu():
+    menu = pygame.image.load("menu.png")                # background
+    pygame.transform.scale(menu,(800,600))         # resize skin enemy in 70px, 70px
+    screen.blit(menu, [-130, 0])                                      #   coo pour l images   
+    pygame.display.update()                                 # update screen
+    for i in range(1300):
+        print("")
+    
     
 def checkScore( enemyC, persoC):
     if(persoC.missile1.lock == 1):
-        if((persoC.missile1.y < enemyC.y+15) & (persoC.missile1.y > enemyC.y - 95) & (persoC.missile1.x < enemyC.x+45) & (persoC.missile1.x > enemyC.x )):
+        if((persoC.missile1.y < enemyC.y+70) & (persoC.missile1.y > enemyC.y - 70) & (persoC.missile1.x < enemyC.x+70) & (persoC.missile1.x > enemyC.x )):
             persoC.score += 1
             persoC.missile1.lock = 0
             enemyC.vie = 0
-            print(persoC.score)
+            
                        
+def checkBoss( enemyC, persoC):
+    if(persoC.missile1.lock == 1):
+        if((persoC.missile1.y < enemyC.y+15) & (persoC.missile1.y > enemyC.y - 95) & (persoC.missile1.x < enemyC.x+45) & (persoC.missile1.x > enemyC.x )):
+            persoC.score += 2
+            persoC.missile1.lock = 0
+            enemyC.POWER -= 1
+            if(enemyC.POWER < 1):
+                persoC.score += 5
+            
+            
+
+            
+class boss :
+    x = 120
+    y = 45
+    xpos = 0
+    ypos = 0
+    POWER = 0
+    vitesse = 3
     
+    skin_boss1 = pygame.image.load("boss1.png")                # enemy skin    
+    skin_boss1 = pygame.transform.scale(skin_boss1,(85,100))         # resize skin enemy in 70px, 70px
+
+    skin_boss2 = pygame.image.load("boss2.png")                # enemy skin    
+    skin_boss2 = pygame.transform.scale(skin_boss2,(85,100))         # resize skin enemy in 70px, 70px
+
+    skin_boss3 = pygame.image.load("boss3.png")                # enemy skin    
+    skin_boss3 = pygame.transform.scale(skin_boss3,(85,100))         # resize skin enemy in 70px, 70px
+    
+    axeX = 0
+    axeY = 0
+    def move(self):
+        if(self.POWER == 0 or self.axeY == 1 & self.axeX == 1 ):
+            
+            self.xpos = random.randrange(90, 710)
+            self.ypos = random.randrange(80, 390)
+            self.axeX = 0
+            self.axeY = 0
+            
+            
+        if(self.POWER == 0) :
+            self.POWER = 10
+
+        if( self.x < self.xpos - 5):
+           self.x += self.vitesse
+        elif ( self.x > self.xpos + 5):
+           self.x -= self.vitesse
+        else :
+            self.axeX= 1 
+           
+        if( self.y < self.ypos - 5):
+           self.y += self.vitesse
+        elif ( self.y > self.ypos + 5):
+           self.y -= self.vitesse
+        else :
+            self.axeY = 1 
+        
+        if(self.POWER > 8 ) :
+            screen.blit(self.skin_boss1, [self.x, self.y])
+        elif(self.POWER > 5 ) :
+            screen.blit(self.skin_boss2, [self.x, self.y])
+        else:
+            screen.blit(self.skin_boss3, [self.x, self.y])
+        
+
 class enemy :
     x = 0
     y = 0
@@ -32,7 +103,7 @@ class enemy :
     
     def move(self):
         if(self.vie == 0) :
-            self.vie = 130
+            self.vie = random.randrange(95,155)
             self.x = random.randrange(90,690)
             self.y = random.randrange(80,430)
         self.vie -= 1    
@@ -41,13 +112,13 @@ class enemy :
 
 class fire:
     skin_laser = pygame.image.load("laser_anim.gif")                # laser skin    
-    skin_laser = pygame.transform.scale(skin_laser,(20,20))         # resize skin laser in 20px, 20px
+    skin_laser = pygame.transform.scale(skin_laser,(30,30))         # resize skin laser in 20px, 20px
     y = 30
     x = 0
     lock = 0
         
     def move(self):
-        self.y -= 7
+        self.y -= 9
         if(self.y < 50 ) :
             self.lock = 0
             
@@ -57,7 +128,7 @@ class fire:
 class persoMain:                                #   main player
 
     name = "default"
-    skin_perso = pygame.image.load("spaceship.png")                # player skin    
+    skin_perso = pygame.image.load("spaceship1.png")                # player skin    
     skin_perso = pygame.transform.scale(skin_perso,(80,80))         # resize skin player in 80px, 80px
 
     missile1 = fire()
@@ -84,9 +155,8 @@ class persoMain:                                #   main player
             self.missile1.move()       
         
     def fire(self):
-        print("fire")
         if(self.missile1.lock == 0):
-            self.missile1.x = self.x
+            self.missile1.x = self.x - 5
             self.missile1.y = 510
             self.missile1.lock = 1
             
@@ -95,9 +165,14 @@ faucon = persoMain()        # create player
 faucon.name = "chewbacca"   # LOL
 font = pygame.font.SysFont("comicsansms", 25)           # font pous les scores
 
-boite_a_caca1 = enemy()
+
+boite_a_caca = [enemy(), enemy(), enemy(), enemy(), enemy(), enemy()]
 
 
+BIGboss = boss()
+myfont = pygame.font.SysFont('Comic Sans MS', 30)
+
+menu()
 while True:                                                 # main game loop                          
     for event in pygame.event.get():                        # event clavier            
         if event.type == pygame.QUIT:                       # condition to leave the game
@@ -105,18 +180,24 @@ while True:                                                 # main game loop
             sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             faucon.fire()
-
-    myfont = pygame.font.SysFont('Comic Sans MS', 30)
-    text = font.render("Score {0}".format(faucon.score), False, (255, 128, 0))    # get score
     
-    screen.fill((255, 255, 255))
-
     
     screen.blit(background, [0, 0])                                      #   coo pour l images   
     faucon.refresh()                                            # update player on background
-    clock.tick(60)                                          # setting in 60 FPS ( i know...)
 
-    boite_a_caca1.move()
-    checkScore(boite_a_caca1,faucon)
-    background.blit(text,(25,25))                                           # print score on background
+    text = font.render("Score {0}".format(faucon.score), False, (255, 128, 0))    # get score
+    screen.blit(text,(25,25))                                           # print score on background
+    
+    for i in range(6):
+        boite_a_caca[i].move()
+        checkScore(boite_a_caca[i], faucon)
+
+
+    BIGboss.move()
+    checkBoss(BIGboss, faucon)
+
+
+    
+    pygame.display.flip()
+    clock.tick(30)
     pygame.display.update()                                 # update screen
