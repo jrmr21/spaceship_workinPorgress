@@ -1,5 +1,4 @@
-import pygame, sys
-import random
+import pygame, sys, random, datetime
 
 #************************************************    BY JRMR     ********************************************
 #*********************************************   TRY in PYTHON 3.6  *****************************************
@@ -12,13 +11,16 @@ background = pygame.image.load("background.jpg")                # background
 
 screen = pygame.display.set_mode([800, 600])    # Create an 800x600 sized screen
 
+
 def menu():
     menu = pygame.image.load("menu.png")                # background
     pygame.transform.scale(menu,(800,600))         # resize skin enemy in 70px, 70px
     screen.blit(menu, [-130, 0])                                      #   coo pour l images   
     pygame.display.update()                                 # update screen
-    for i in range(1300):
-        print("")
+    date = datetime.datetime.now()
+    i = date.second
+    while date.second < i + 15:
+        date = datetime.datetime.now()
     
     
 def checkScore( enemyC, persoC):
@@ -65,6 +67,7 @@ class boss :
             
             self.xpos = random.randrange(90, 710)
             self.ypos = random.randrange(80, 390)
+            self.vitesse = random.randrange(3, 7)
             self.axeX = 0
             self.axeY = 0
             
