@@ -222,7 +222,7 @@ def program() :
             timeTemporaire = date.second
             if(secondes < 1 ):
                 minutes -=1
-                if(minutes < 9):
+                if(minutes < 0):
                     fin(faucon.score)
                 secondes = 60
             secondes -= 1
