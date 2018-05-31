@@ -19,8 +19,9 @@ def menu():
     pygame.display.update()                                 # update screen
     date = datetime.datetime.now()
     i = date.second
-    while date.second < i + 15:
+    while date.second < i + 10:
         date = datetime.datetime.now()
+    program()
     
     
 def checkScore( enemyC, persoC):
@@ -39,8 +40,6 @@ def checkBoss( enemyC, persoC):
             enemyC.POWER -= 1
             if(enemyC.POWER < 1):
                 persoC.score += 5
-            
-            
 
             
 class boss :
@@ -162,45 +161,81 @@ class persoMain:                                #   main player
             self.missile1.x = self.x - 5
             self.missile1.y = 510
             self.missile1.lock = 1
-            
 
-faucon = persoMain()        # create player
-faucon.name = "chewbacca"   # LOL
-font = pygame.font.SysFont("comicsansms", 25)           # font pous les scores
+def fin(score):
+    menu = pygame.image.load("end.png")                # background
+    pygame.transform.scale(menu,(800,600))         # resize skin enemy in 70px, 70px
+    screen.blit(menu, [0, 0])                                      #   coo pour l images
+
+    font = pygame.font.SysFont("arial", 45)           # font pous les scores
+    textScore = font.render("score : {0}".format(score), False, (0, 0, 0))    # get score
+    screen.blit(textScore,(350,270))
+    
+    pygame.display.update()                                 # update screen
+    while True:                                                 # main game loop                          
+        for event in pygame.event.get():                        # event clavier            
+            if event.type == pygame.QUIT:                       # condition to leave the game
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                program()
+
+    
+def program() :
+    faucon = persoMain()        # create player
+    faucon.name = "chewbacca"   # LOL
+
+    boite_a_caca = [enemy(), enemy(), enemy(), enemy(), enemy(), enemy()]
+    BIGboss = boss()
+
+    font = pygame.font.SysFont("comicsansms", 25)           # font pous les scores
+
+    minutes = 4
+    secondes = 60
+    timeTemporaire = 0
+    while True:                                                 # main game loop                          
+        for event in pygame.event.get():                        # event clavier            
+            if event.type == pygame.QUIT:                       # condition to leave the game
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                faucon.fire()
+        
+        
+        screen.blit(background, [0, 0])                                      #   coo pour l images   
+        faucon.refresh()                                            # update player on background
+
+        text = font.render("Score {0}".format(faucon.score), False, (255, 128, 0))    # get score
+        screen.blit(text,(25,25))                                           # print score on background
+        
+        for i in range(6):
+            boite_a_caca[i].move()
+            checkScore(boite_a_caca[i], faucon)
 
 
-boite_a_caca = [enemy(), enemy(), enemy(), enemy(), enemy(), enemy()]
+        BIGboss.move()
+        checkBoss(BIGboss, faucon)
+
+        date = datetime.datetime.now()
+        
+        if(timeTemporaire != date.second):
+            timeTemporaire = date.second
+            if(secondes < 1 ):
+                minutes -=1
+                if(minutes < 9):
+                    fin(faucon.score)
+                secondes = 60
+            secondes -= 1
+        
+        textMinutes = font.render("temps: {0}".format(minutes), False, (255, 128, 0))    # get score
+        screen.blit(textMinutes,(615,25))
+        textSecondes = font.render(": {0}".format(secondes), False, (255, 128, 0))    # get score
+        screen.blit(textSecondes,(730,25))
+        
+        clock.tick(30)
+        pygame.display.update()                                 # update screen
 
 
-BIGboss = boss()
-myfont = pygame.font.SysFont('Comic Sans MS', 30)
+
 
 menu()
-while True:                                                 # main game loop                          
-    for event in pygame.event.get():                        # event clavier            
-        if event.type == pygame.QUIT:                       # condition to leave the game
-            pygame.quit()
-            sys.exit()
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            faucon.fire()
-    
-    
-    screen.blit(background, [0, 0])                                      #   coo pour l images   
-    faucon.refresh()                                            # update player on background
-
-    text = font.render("Score {0}".format(faucon.score), False, (255, 128, 0))    # get score
-    screen.blit(text,(25,25))                                           # print score on background
-    
-    for i in range(6):
-        boite_a_caca[i].move()
-        checkScore(boite_a_caca[i], faucon)
-
-
-    BIGboss.move()
-    checkBoss(BIGboss, faucon)
-
-
-    
-    pygame.display.flip()
-    clock.tick(30)
-    pygame.display.update()                                 # update screen
