@@ -200,13 +200,16 @@ def fin(score):
     screen.blit(textScore,(350,400))
     
     pygame.display.update()                                 # update screen
+    click = 4
     while True:                                                 # main game loop                          
         for event in pygame.event.get():                        # event clavier            
             if event.type == pygame.QUIT:                       # condition to leave the game
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                program()
+                click -= 1
+                if(click < 1 ) :
+                    program()
 
     
 def program() :
