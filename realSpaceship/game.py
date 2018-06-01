@@ -19,17 +19,20 @@ def menu():
     pygame.display.update()                                 # update screen
     date = datetime.datetime.now()
     i = date.second
-    while date.second < i + 10:
+    while True:
         date = datetime.datetime.now()
-    program()
+        if(date.second > i + 3):
+            program()
+    
     
     
 def checkScore( enemyC, persoC):
-    if(persoC.missile1.lock == 1):
+    if(persoC.missile1.lock == 1 and enemyC.explosion == 0):
         if((persoC.missile1.y < enemyC.y+70) & (persoC.missile1.y > enemyC.y - 70) & (persoC.missile1.x < enemyC.x+70) & (persoC.missile1.x > enemyC.x )):
             persoC.score += 1
             persoC.missile1.lock = 0
             enemyC.vie = 0
+            enemyC.explosion = 15
             
                        
 def checkBoss( enemyC, persoC):
@@ -101,16 +104,27 @@ class enemy :
     y = 0
     skin_enemy = pygame.image.load("enemy.gif")                # enemy skin    
     skin_enemy = pygame.transform.scale(skin_enemy,(70,70))         # resize skin enemy in 70px, 70px
-    vie = 0
     
-    def move(self):
-        if(self.vie == 0) :
+    skin_boum = pygame.image.load("boum.png")                # enemy skin    
+    skin_boum = pygame.transform.scale(skin_boum,(70,70))         # resize skin enemy in 70px, 70px
+    vie = 0
+    explosion = 0
+    def move(self):            
+            
+        if(self.vie != 0):
+            self.vie -= 1    
+            screen.blit(self.skin_enemy, [self.x, self.y])
+            
+        elif(self.explosion != 0):
+            self.explosion -= 1    
+            screen.blit(self.skin_boum, [self.x, self.y])
+            
+        else :
             self.vie = random.randrange(95,155)
             self.x = random.randrange(90,690)
             self.y = random.randrange(80,430)
-        self.vie -= 1    
-        screen.blit(self.skin_enemy, [self.x, self.y])
-
+            
+            
 
 class fire:
     skin_laser = pygame.image.load("laser_anim.gif")                # laser skin    
@@ -163,13 +177,27 @@ class persoMain:                                #   main player
             self.missile1.lock = 1
 
 def fin(score):
+
+    fichier = open("score.txt", "r")
+    bestScore = int(fichier.read())
+    fichier.close()
+    if(score > bestScore):
+        bestScore = score
+        fichier = open("score.txt", "w")
+        fichier.write(str(score))
+        fichier.close()
+    
     menu = pygame.image.load("end.png")                # background
     pygame.transform.scale(menu,(800,600))         # resize skin enemy in 70px, 70px
     screen.blit(menu, [0, 0])                                      #   coo pour l images
 
     font = pygame.font.SysFont("arial", 45)           # font pous les scores
-    textScore = font.render("score : {0}".format(score), False, (0, 0, 0))    # get score
+    textScore = font.render("ton score : {0}".format(score), False, (0, 0, 0))    # get score
     screen.blit(textScore,(350,270))
+
+    font = pygame.font.SysFont("arial", 50)           # font pous les scores
+    textScore = font.render("meilleur score : {0}".format(bestScore), False, (0, 0, 0))    # get score
+    screen.blit(textScore,(350,400))
     
     pygame.display.update()                                 # update screen
     while True:                                                 # main game loop                          
@@ -190,7 +218,7 @@ def program() :
 
     font = pygame.font.SysFont("comicsansms", 25)           # font pous les scores
 
-    minutes = 4
+    minutes = 1
     secondes = 60
     timeTemporaire = 0
     while True:                                                 # main game loop                          
@@ -234,8 +262,6 @@ def program() :
         
         clock.tick(30)
         pygame.display.update()                                 # update screen
-
-
 
 
 menu()
