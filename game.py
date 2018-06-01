@@ -27,7 +27,7 @@ def menu():
     
     
 def checkScore( enemyC, persoC):
-    if(persoC.missile1.lock == 1 and enemyC.explosion == 0):
+    if(persoC.missile1.lock == 1 and enemyC.explosion == 0):    # check explosion fuck the logic...
         if((persoC.missile1.y < enemyC.y+70) & (persoC.missile1.y > enemyC.y - 70) & (persoC.missile1.x < enemyC.x+70) & (persoC.missile1.x > enemyC.x )):
             persoC.score += 1
             persoC.missile1.lock = 0
