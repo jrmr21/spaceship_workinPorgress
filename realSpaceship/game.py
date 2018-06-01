@@ -54,13 +54,13 @@ class boss :                    #   boss object
     vitesse = 3                 # speed move (3px)
     
     skin_boss1 = pygame.image.load("boss1.png")                # boss GOOD skin    
-    skin_boss1 = pygame.transform.scale(skin_boss1,(85,100))         # resize skin enemy in 70px, 70px
+    skin_boss1 = pygame.transform.scale(skin_boss1,(85,100))         # resize skin enemy in 85px, 100px
 
     skin_boss2 = pygame.image.load("boss2.png")                # boss NORMAL skin    
-    skin_boss2 = pygame.transform.scale(skin_boss2,(85,100))         # resize skin enemy in 70px, 70px
+    skin_boss2 = pygame.transform.scale(skin_boss2,(85,100))         # resize skin enemy in 85px, 100px
 
     skin_boss3 = pygame.image.load("boss3.png")                # boss my ass is teflon ? skin    
-    skin_boss3 = pygame.transform.scale(skin_boss3,(85,100))         # resize skin enemy in 70px, 70px
+    skin_boss3 = pygame.transform.scale(skin_boss3,(85,100))         # resize skin enemy in 85px, 100px
     
     axeX = 0            # axe X checkup if you finish move to X
     axeY = 0            # axe Y checkup if you finish move to Y
@@ -226,7 +226,7 @@ def program() :
             if event.type == pygame.QUIT:                       # condition to leave the game
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:          #   gamer fire run
                 faucon.fire()
         
         
