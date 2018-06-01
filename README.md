@@ -8,4 +8,5 @@ spaceship game in progress
 SYNTAX PYTHON IS A VERY VEEEEERY BIG SHIT @_@
 
 I can destroy a fucking condition WTFFFFFFF ????!!!!!!!
-The destroy life properties in enemy class can fuck condition in check score ?!!
+
+The destroy life properties in enemy class can fuck condition in check score !!
